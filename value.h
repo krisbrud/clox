@@ -9,4 +9,14 @@
 
 typedef double Value; // TODO: Support different types of values
 
+typedef struct {
+    int capacity;
+    int count;
+    Value* values;
+} ValueArray;
+
+void initValueArray(ValueArray* array);
+void writeValueArray(ValueArray* array, Value value);
+void freeValueArray(ValueArray* array);
+
 #endif //CLOX_VALUE_H
