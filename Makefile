@@ -160,6 +160,30 @@ chunk.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/clox.dir/build.make CMakeFiles/clox.dir/chunk.c.s
 .PHONY : chunk.c.s
 
+debug.o: debug.c.o
+.PHONY : debug.o
+
+# target to build an object file
+debug.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/clox.dir/build.make CMakeFiles/clox.dir/debug.c.o
+.PHONY : debug.c.o
+
+debug.i: debug.c.i
+.PHONY : debug.i
+
+# target to preprocess a source file
+debug.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/clox.dir/build.make CMakeFiles/clox.dir/debug.c.i
+.PHONY : debug.c.i
+
+debug.s: debug.c.s
+.PHONY : debug.s
+
+# target to generate assembly for a file
+debug.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/clox.dir/build.make CMakeFiles/clox.dir/debug.c.s
+.PHONY : debug.c.s
+
 main.o: main.c.o
 .PHONY : main.o
 
@@ -221,6 +245,9 @@ help:
 	@echo "... chunk.o"
 	@echo "... chunk.i"
 	@echo "... chunk.s"
+	@echo "... debug.o"
+	@echo "... debug.i"
+	@echo "... debug.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
