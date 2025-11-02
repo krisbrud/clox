@@ -2,6 +2,8 @@
 // Created by Kristian Brudeli on 02/11/2025.
 //
 
+#include <stdio.h>
+
 #include "memory.h"
 #include "value.h"
 
@@ -25,4 +27,9 @@ void writeValueArray(ValueArray *array, Value value) {
 void freeValueArray(ValueArray* array) {
     FREE_ARRAY(Value, array->values, array->capacity);
     initValueArray(array);
+}
+
+
+void printValue(Value value) {
+    printf("%g", value);
 }
