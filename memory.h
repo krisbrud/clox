@@ -12,7 +12,7 @@
 
 #define GROW_ARRAY(type, pointer, oldCount, newCount) \
     (type*)reallocate(pointer, sizeof(type) * (oldCount), \
-        sizeof(type) * newCount))
+        sizeof(type) * (newCount))
 
 void* reallocate(void* pointer, size_t oldSize, size_t newSize);
 
