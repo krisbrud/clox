@@ -31,6 +31,14 @@ static int simpleInstruction(const char* name, int offset) {
 int disassembleInstruction(Chunk* chunk, int offset) {
     printf("%04d ", offset); // Print the offset with zero padding
 
+    if (offset > 0 && chunk->lines[offset] == chunk->lines[offset - 1]) {
+        // The instruction comes from the same line as the previous
+        printf("   | ");
+    } else {
+        // Instruction is on a new line compared to the previous
+        printf("%4d ", chunk->lines[offset]);
+    }
+
     uint8_t instruction = chunk->code[offset];
     switch (instruction) {
         case OP_CONSTANT:
