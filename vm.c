@@ -11,7 +11,12 @@
 // Limitation: Program can only handle a single VM.
 VM vm;
 
+static void resetStack() {
+    vm.stackTop = vm.stack;
+}
+
 void initVM() {
+    resetStack();
 }
 
 void freeVM() {
@@ -51,3 +56,12 @@ InterpretResult interpret(Chunk *chunk) {
     return run();
 }
 
+void push(Value value) {
+    *vm.stackTop = value;
+    vm.stackTop++;
+}
+
+Value pop() {
+    vm.stackTop--;
+    return *vm.stackTop;
+}
