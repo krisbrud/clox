@@ -29,8 +29,8 @@ typedef enum {
 
 typedef struct {
     TokenType type;
-    const char* start;
-    int length;
+    const char* start; // Pointer to the start of the lexeme in the source string
+    int length; // of the lexeme
     int line;
 } Token;
 
