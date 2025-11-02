@@ -6,6 +6,7 @@
 
 #include "common.h"
 #include "vm.h"
+#include "debug.h"
 
 // Limitation: Program can only handle a single VM.
 VM vm;
@@ -22,6 +23,9 @@ static InterpretResult run() {
 
 
     for (;;) {
+#ifdef DEBUG_TRACE_EXECUTION
+    disassembleInstruction(vm.chunk, (int)(vm.ip - vm.chunk->code));
+#endif
         uint8_t instruction;
         switch (instruction = READ_BYTE()) {
             case OP_CONSTANT: {
