@@ -136,6 +136,30 @@ clox/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/clox.dir/build.make CMakeFiles/clox.dir/build
 .PHONY : clox/fast
 
+chunk.o: chunk.c.o
+.PHONY : chunk.o
+
+# target to build an object file
+chunk.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/clox.dir/build.make CMakeFiles/clox.dir/chunk.c.o
+.PHONY : chunk.c.o
+
+chunk.i: chunk.c.i
+.PHONY : chunk.i
+
+# target to preprocess a source file
+chunk.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/clox.dir/build.make CMakeFiles/clox.dir/chunk.c.i
+.PHONY : chunk.c.i
+
+chunk.s: chunk.c.s
+.PHONY : chunk.s
+
+# target to generate assembly for a file
+chunk.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/clox.dir/build.make CMakeFiles/clox.dir/chunk.c.s
+.PHONY : chunk.c.s
+
 main.o: main.c.o
 .PHONY : main.o
 
@@ -160,6 +184,30 @@ main.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/clox.dir/build.make CMakeFiles/clox.dir/main.c.s
 .PHONY : main.c.s
 
+memory.o: memory.c.o
+.PHONY : memory.o
+
+# target to build an object file
+memory.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/clox.dir/build.make CMakeFiles/clox.dir/memory.c.o
+.PHONY : memory.c.o
+
+memory.i: memory.c.i
+.PHONY : memory.i
+
+# target to preprocess a source file
+memory.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/clox.dir/build.make CMakeFiles/clox.dir/memory.c.i
+.PHONY : memory.c.i
+
+memory.s: memory.c.s
+.PHONY : memory.s
+
+# target to generate assembly for a file
+memory.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/clox.dir/build.make CMakeFiles/clox.dir/memory.c.s
+.PHONY : memory.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -170,9 +218,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... clox"
+	@echo "... chunk.o"
+	@echo "... chunk.i"
+	@echo "... chunk.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... memory.o"
+	@echo "... memory.i"
+	@echo "... memory.s"
 .PHONY : help
 
 
