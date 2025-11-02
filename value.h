@@ -1,0 +1,12 @@
+//
+// Created by Kristian Brudeli on 02/11/2025.
+//
+
+#ifndef CLOX_VALUE_H
+#define CLOX_VALUE_H
+
+#include "common.h"
+
+typedef double Value; // TODO: Support different types of values
+
+#endif //CLOX_VALUE_H
