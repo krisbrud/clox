@@ -18,4 +18,6 @@ add_executable(clox main.c
         chunk.c
         vm.h
         vm.c
+        compiler.c
+        compiler.h
 )
