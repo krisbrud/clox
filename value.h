@@ -7,7 +7,19 @@
 
 #include "common.h"
 
-typedef double Value; // TODO: Support different types of values
+typedef enum {
+    VAL_BOOL,
+    VAL_NIL,
+    VAL_NUMBER,
+} ValueType;
+
+typedef struct {
+    ValueType type;
+    union {
+        bool boolean;
+        double number;
+    } as;
+} Value; // TODO: Support different types of values
 
 typedef struct {
     int capacity;
