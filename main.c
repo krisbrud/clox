@@ -5,6 +5,8 @@
 #include "chunk.h"
 #include "debug.h"
 #include "vm.h"
+#include "table.h"
+#include "object.h"
 
 static void repl() {
     char line[1024];
@@ -56,9 +58,33 @@ static void runFile(const char* path) {
     if (result == INTERPRET_RUNTIME_ERROR) exit(70);
 }
 
+// void test_table() {
+//     Table table;
+//     initTable(&table);
+//
+//     ObjString* key1 = copyString("a", 1);
+//     ObjString* key2 = copyString("b", 1);
+//     // Value key2Value = OBJ_VAL(key2);
+//
+//     ObjString* val1 = copyString("A", 1);
+//     Value val1Value = OBJ_VAL(key1);
+//
+//     // ObjString* key2 = copyString("a", 1);
+//
+//     tableSet(&table, key1, val1Value);
+//
+//     Value outVal;
+//
+//     // tableGet(&table, &key1, &outVal);
+//     tableGet(&table, key2, &outVal);
+//
+//     printObject(outVal);
+// }
 
 int main(int argc, const char* argv[]) {
     initVM();
+
+    // test_table(); return 0;
 
     if (argc == 1) {
         repl();
