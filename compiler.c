@@ -152,15 +152,18 @@ static ParseRule *getRule(TokenType type);
 static void parsePrecedence(Precedence precedence);
 
 static uint8_t identifierConstant(Token* name) {
+    // printf("In identifierConstant\n");
     return makeConstant(OBJ_VAL(copyString(name->start, name->length)));
 }
 
 static uint8_t parseVariable(const char* errorMessage) {
+    printf("In parseVariable\n");
     consume(TOKEN_IDENTIFIER, errorMessage);
     return identifierConstant(&parser.previous);
 }
 
 static void defineVariable(uint8_t global) {
+    // printf("In defineVariable\n");
     emitBytes(OP_DEFINE_GLOBAL, global);
 }
 

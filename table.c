@@ -4,8 +4,10 @@
 
 #include "table.h"
 
+#include <stdio.h>
 #include <string.h>
 
+#include "common.h"
 #include "memory.h"
 #include "value.h"
 
@@ -46,6 +48,8 @@ static Entry *findEntry(Entry *entries, int capacity, ObjString *key) {
 }
 
 bool tableGet(Table *table, ObjString *key, Value *value) {
+    printf("GET key=%s hash=%u\n", key->chars, key->hash);
+
     if (table->count == 0) return false; // just an optimisation
 
     Entry *entry = findEntry(table->entries, table->capacity, key);
@@ -91,18 +95,18 @@ void tableAddAll(Table *from, Table *to) {
     }
 }
 
-ObjString * tableFindString(Table *table, const char *chars, int length, uint32_t hash) {
+ObjString *tableFindString(Table *table, const char *chars, int length, uint32_t hash) {
     if (table->count == 0) return NULL;
 
     uint32_t index = hash % table->capacity;
     for (;;) {
-        Entry* entry = &table->entries[index];
+        Entry *entry = &table->entries[index];
         if (entry->key == NULL) {
             // Stop if we find an empty non-tombstone entry.
             if (IS_NIL(entry->value)) return NULL;
         } else if (entry->key->length == length &&
-            entry->key->hash == hash &&
-            memcmp(entry->key->chars, chars, length) == 0) {
+                   entry->key->hash == hash &&
+                   memcmp(entry->key->chars, chars, length) == 0) {
             // found the string
             return entry->key;
         }
@@ -112,8 +116,11 @@ ObjString * tableFindString(Table *table, const char *chars, int length, uint32_
 }
 
 bool tableSet(Table *table, ObjString *key, Value value) {
+    printf("SET key=%s hash=%u\n", key->chars, key->hash);
+
     if (table->count + 1 > table->capacity * TABLE_MAX_LOAD) {
         int capacity = GROW_CAPACITY(table->capacity);
+        printf("Adjusting capacity to %d\n", capacity);
         adjustCapacity(table, capacity);
     }
 

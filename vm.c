@@ -17,7 +17,7 @@
 VM vm;
 
 static void resetStack() {
-    vm.stackTop = vm.stack;
+    vm.stackTop = (Value*)vm.stack;
 }
 
 static void runtimeError(const char* format, ...) {
@@ -98,7 +98,7 @@ static InterpretResult run() {
     for (;;) {
 #ifdef DEBUG_TRACE_EXECUTION
     printf("          ");
-    for (Value* slot = vm.stack; slot < vm.stackTop; slot++) {
+    for (Value* slot = (Value*)vm.stack; slot < vm.stackTop; slot++) {
         printf("[ ");
         printValue(*slot);
         printf(" ]");
