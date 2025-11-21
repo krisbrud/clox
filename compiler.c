@@ -342,7 +342,7 @@ static void namedVariable(Token name, bool canAssign) {
         setOp = OP_SET_LOCAL;
     } else {
         // global variable
-        uint8_t arg = identifierConstant(&name);
+        arg = identifierConstant(&name);
         getOp = OP_GET_GLOBAL;
         setOp = OP_SET_GLOBAL;
     }
@@ -383,9 +383,16 @@ static void ifStatement() {
     consume(TOKEN_RIGHT_PAREN, "Expect ')' after 'if'.") ;
 
     int thenJump = emitJump(OP_JUMP_IF_FALSE); // Don't execute "then" block
+    emitByte(OP_POP);
     statement();
 
+    int elseJump = emitJump(OP_JUMP);
+    emitByte(OP_POP);
+
     patchJump(thenJump);
+
+    if (match(TOKEN_ELSE)) statement();
+    patchJump(elseJump);
 }
 
 static void printStatement() {
