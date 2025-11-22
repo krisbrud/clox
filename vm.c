@@ -264,8 +264,17 @@ static InterpretResult run() {
                 break;
             }
             case OP_RETURN: {
-                // exit interpreter
-                return INTERPRET_OK;
+                Value result = pop();
+                vm.frameCount--;
+                if (vm.frameCount == 0) {
+                    pop(); // pop the main script function from the stack
+                    return INTERPRET_OK;
+                }
+
+                vm.stackTop = frame->slots;
+                push(result);
+                frame = &vm.frames[vm.frameCount - 1];
+                break;
             }
                 // TODO: Add more cases
         }
