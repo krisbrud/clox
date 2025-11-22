@@ -312,6 +312,7 @@ static uint8_t parseVariable(const char *errorMessage) {
 }
 
 static void markInitialized() {
+    printf("In markInitialized\n");
     if (current->scopeDepth == 0) return; // global var
     current->locals[current->localCount - 1].depth = current->scopeDepth;
 }
@@ -467,6 +468,7 @@ static void block() {
 }
 
 static void function(FunctionType type) {
+    printf("in function()\n");
     Compiler compiler;
     initCompiler(&compiler, type);
     beginScope();
@@ -492,6 +494,7 @@ static void function(FunctionType type) {
 }
 
 static void funDeclaration() {
+    printf("fundeclaration\n");
     uint8_t global = parseVariable("Expect function name.");
     markInitialized();
     function(TYPE_FUNCTION);

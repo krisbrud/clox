@@ -116,8 +116,6 @@ ObjString *tableFindString(Table *table, const char *chars, int length, uint32_t
 }
 
 bool tableSet(Table *table, ObjString *key, Value value) {
-    printf("SET key=%s hash=%u\n", key->chars, key->hash);
-
     if (table->count + 1 > table->capacity * TABLE_MAX_LOAD) {
         int capacity = GROW_CAPACITY(table->capacity);
         printf("Adjusting capacity to %d\n", capacity);

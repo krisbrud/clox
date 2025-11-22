@@ -1,0 +1,10 @@
+fun fib(n) {
+    return 1;
+//   if (n < 2) return n;
+//   return 2; // TODO remove
+//   // return fib(n - 2) + fib(n - 1);
+}
+
+var start = clock();
+// print fib(35);
+print clock() - start;
