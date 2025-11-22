@@ -304,6 +304,7 @@ static uint8_t parseVariable(const char *errorMessage) {
 }
 
 static void markInitialized() {
+    if (current->scopeDepth == 0) return; // global var
     current->locals[current->localCount - 1].depth = current->scopeDepth;
 }
 
@@ -437,6 +438,28 @@ static void block() {
     consume(TOKEN_RIGHT_BRACE, "Expect '}' after block.");
 }
 
+static void function(FunctionType type) {
+    Compiler compiler;
+    initCompiler(&compiler, type);
+    beginScope();
+
+    consume(TOKEN_LEFT_PAREN, "Expect '(' after function name.");
+    // TODO parse params
+    consume(TOKEN_RIGHT_PAREN, "Expect '(' after function name.");
+    consume(TOKEN_LEFT_BRACE, "Expect '(' after function name.");
+    block();
+
+    ObjFunction* function = endCompiler();
+    emitBytes(OP_CONSTANT, makeConstant(OBJ_VAL(function)));
+}
+
+static void funDeclaration() {
+    uint8_t global = parseVariable("Expect function name.");
+    markInitialized();
+    function(TYPE_FUNCTION);
+    defineVariable(global);
+}
+
 static void expressionStatement() {
     expression();
     consume(TOKEN_SEMICOLON, "Expect ';' after expression.");
@@ -565,7 +588,9 @@ static void varDeclaration() {
 }
 
 static void declaration() {
-    if (match(TOKEN_VAR)) {
+    if (match(TOKEN_FUN)) {
+        funDeclaration();
+    } else if (match(TOKEN_VAR)) {
         varDeclaration();
     } else {
         statement();
