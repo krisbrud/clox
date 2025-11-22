@@ -38,7 +38,7 @@ ObjFunction * newFunction() {
     function->arity = 0;
     function->name = NULL;
     initChunk(&function->chunk);
-    return function
+    return function;
 }
 
 static uint32_t hashString(const char* key, int length) {
