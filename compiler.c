@@ -247,7 +247,6 @@ static ParseRule *getRule(TokenType type);
 static void parsePrecedence(Precedence precedence);
 
 static uint8_t identifierConstant(Token *name) {
-    // printf("In identifierConstant\n");
     return makeConstant(OBJ_VAL(copyString(name->start, name->length)));
 }
 
@@ -302,7 +301,6 @@ static void declareVariable() {
 }
 
 static uint8_t parseVariable(const char *errorMessage) {
-    printf("In parseVariable\n");
     consume(TOKEN_IDENTIFIER, errorMessage);
 
     declareVariable();
@@ -312,7 +310,6 @@ static uint8_t parseVariable(const char *errorMessage) {
 }
 
 static void markInitialized() {
-    printf("In markInitialized\n");
     if (current->scopeDepth == 0) return; // global var
     current->locals[current->localCount - 1].depth = current->scopeDepth;
 }
@@ -431,10 +428,8 @@ static void string(bool canAssign) {
 }
 
 static void namedVariable(Token name, bool canAssign) {
-    printf("in namedVariable, canAssign %d\n", canAssign);
     uint8_t getOp, setOp;
     int arg = resolveLocal(current, &name);
-    printf("arg %d\n", arg);
     if (arg != -1) {
         getOp = OP_GET_LOCAL;
         setOp = OP_SET_LOCAL;
@@ -454,7 +449,6 @@ static void namedVariable(Token name, bool canAssign) {
 }
 
 static void variable(bool canAssign) {
-    printf("in variable\n");
     namedVariable(parser.previous, canAssign);
 }
 
@@ -471,7 +465,6 @@ static void block() {
 }
 
 static void function(FunctionType type) {
-    printf("in function()\n");
     Compiler compiler;
     initCompiler(&compiler, type);
     beginScope();
@@ -480,7 +473,6 @@ static void function(FunctionType type) {
     if (!check(TOKEN_RIGHT_PAREN)) {
         do {
             // Should have at least one param if we get here
-            printf("in do\n");
             current->function->arity++;
             if (current->function->arity > 255) {
                 errorAtCurrent("Can't have more than 255 parameters");
@@ -506,7 +498,6 @@ static void funDeclaration() {
 }
 
 static void expressionStatement() {
-    printf("in expressionStatement()\n");
     expression();
     consume(TOKEN_SEMICOLON, "Expect ';' after expression.");
     emitByte(OP_POP);
@@ -584,7 +575,6 @@ static void printStatement() {
 }
 
 static void returnStatement() {
-    printf("in returnstatement\n");
     if (current->type == TYPE_SCRIPT) {
         error("Can't return from top-level code.");
     }
@@ -662,7 +652,6 @@ static void declaration() {
 }
 
 static void statement() {
-    printf("in statement()\n");
     if (match(TOKEN_PRINT)) {
         printStatement();
     } else if (match(TOKEN_FOR)) {
@@ -704,9 +693,7 @@ static void unary(bool canAssign) {
 }
 
 static void parsePrecedence(Precedence precedence) {
-    printf("in parsePrecedence, precedence: %d\n", precedence);
     advance();
-    printf("previous after advance %d\n", parser.previous.type);
     ParseFn prefixRule = getRule(parser.previous.type)->prefix;
     if (prefixRule == NULL) {
         error("Expect expression");

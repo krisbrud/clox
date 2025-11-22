@@ -48,8 +48,6 @@ static Entry *findEntry(Entry *entries, int capacity, ObjString *key) {
 }
 
 bool tableGet(Table *table, ObjString *key, Value *value) {
-    printf("GET key=%s hash=%u\n", key->chars, key->hash);
-
     if (table->count == 0) return false; // just an optimisation
 
     Entry *entry = findEntry(table->entries, table->capacity, key);
