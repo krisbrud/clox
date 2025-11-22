@@ -447,7 +447,16 @@ static void function(FunctionType type) {
     beginScope();
 
     consume(TOKEN_LEFT_PAREN, "Expect '(' after function name.");
-    // TODO parse params
+    if (!check(TOKEN_RIGHT_PAREN)) {
+        do { // Should have at least one param if we get here
+            current->function->arity++;
+            if (current->function->arity > 255) {
+                errorAtCurrent("Can't have more than 255 parameters");
+            }
+            uint8_t constant = parseVariable("Expect parameter name.");
+            defineVariable(constant);
+        } while (match(TOKEN_COMMA));
+    }
     consume(TOKEN_RIGHT_PAREN, "Expect '(' after function name.");
     consume(TOKEN_LEFT_BRACE, "Expect '(' after function name.");
     block();
