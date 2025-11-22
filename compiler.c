@@ -54,8 +54,8 @@ typedef enum {
 } FunctionType;
 
 typedef struct Compiler {
-    struct Compiler* enclosing;
-    ObjFunction* function;
+    struct Compiler *enclosing;
+    ObjFunction *function;
     FunctionType type;
 
     Local locals[UINT8_COUNT];
@@ -194,16 +194,20 @@ static void initCompiler(Compiler *compiler, FunctionType type) {
     compiler->scopeDepth = 0;
     compiler->function = newFunction();
     current = compiler;
+    if (type != TYPE_SCRIPT) {
+        current->function->name = copyString(parser.previous.start,
+                                             parser.previous.length);
+    }
 
-    Local* local = &current->locals[current->localCount++];
+    Local *local = &current->locals[current->localCount++];
     local->depth = 0;
     local->name.start = "";
     local->name.length = 0;
 }
 
-static ObjFunction* endCompiler() {
+static ObjFunction *endCompiler() {
     emitReturn();
-    ObjFunction* function = current->function;
+    ObjFunction *function = current->function;
 
 #ifdef DEBUG_PRINT_CODE
     if (!parser.hadError) {
@@ -448,7 +452,8 @@ static void function(FunctionType type) {
 
     consume(TOKEN_LEFT_PAREN, "Expect '(' after function name.");
     if (!check(TOKEN_RIGHT_PAREN)) {
-        do { // Should have at least one param if we get here
+        do {
+            // Should have at least one param if we get here
             current->function->arity++;
             if (current->function->arity > 255) {
                 errorAtCurrent("Can't have more than 255 parameters");
@@ -461,7 +466,7 @@ static void function(FunctionType type) {
     consume(TOKEN_LEFT_BRACE, "Expect '(' after function name.");
     block();
 
-    ObjFunction* function = endCompiler();
+    ObjFunction *function = endCompiler();
     emitBytes(OP_CONSTANT, makeConstant(OBJ_VAL(function)));
 }
 
@@ -480,7 +485,7 @@ static void expressionStatement() {
 
 static void forStatement() {
     beginScope();
-    consume(TOKEN_LEFT_PAREN, "Expect '(' after 'for'.") ;
+    consume(TOKEN_LEFT_PAREN, "Expect '(' after 'for'.");
     if (match(TOKEN_SEMICOLON)) {
         // No initializer
     } else if (match(TOKEN_VAR)) {
@@ -527,7 +532,7 @@ static void forStatement() {
 static void ifStatement() {
     consume(TOKEN_LEFT_PAREN, "Expect '(' after 'if'.");
     expression();
-    consume(TOKEN_RIGHT_PAREN, "Expect ')' after 'if'.") ;
+    consume(TOKEN_RIGHT_PAREN, "Expect ')' after 'if'.");
 
     int thenJump = emitJump(OP_JUMP_IF_FALSE); // Don't execute "then" block
     emitByte(OP_POP);
@@ -721,7 +726,7 @@ static ParseRule *getRule(TokenType type) {
     return &rules[type];
 }
 
-ObjFunction* compile(const char *source) {
+ObjFunction *compile(const char *source) {
     initScanner(source);
     Compiler compiler;
     initCompiler(&compiler, TYPE_SCRIPT);
@@ -735,6 +740,6 @@ ObjFunction* compile(const char *source) {
         declaration();
     }
 
-    ObjFunction* function = endCompiler();
+    ObjFunction *function = endCompiler();
     return parser.hadError ? NULL : function;
 }
