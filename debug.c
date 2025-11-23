@@ -5,9 +5,11 @@
 #include <stdio.h>
 
 #include "debug.h"
+
+#include "object.h"
 #include "value.h"
 
-void disassembleChunk(Chunk* chunk, const char* name) {
+void disassembleChunk(Chunk *chunk, const char *name) {
     printf("== %s ==\n", name);
 
     for (int offset = 0; offset < chunk->count;) {
@@ -15,7 +17,7 @@ void disassembleChunk(Chunk* chunk, const char* name) {
     }
 }
 
-static int constantInstruction(const char* name, Chunk* chunk, int offset) {
+static int constantInstruction(const char *name, Chunk *chunk, int offset) {
     uint8_t constant = chunk->code[offset + 1];
     printf("%-16s %4d '", name, constant);
     printValue(chunk->constants.values[constant]);
@@ -23,25 +25,25 @@ static int constantInstruction(const char* name, Chunk* chunk, int offset) {
     return offset + 2;
 }
 
-static int simpleInstruction(const char* name, int offset) {
+static int simpleInstruction(const char *name, int offset) {
     printf("%s\n", name);
     return offset + 1;
 }
 
-static int byteInstruction(const char* name, Chunk* chunk, int offset) {
+static int byteInstruction(const char *name, Chunk *chunk, int offset) {
     uint8_t slot = chunk->code[offset + 1];
     printf("%-16s %4d", name, slot);
     return offset + 2;
 }
 
-static int jumpInstruction(const char* name, int sign, Chunk* chunk, int offset) {
-    uint16_t jump = (uint16_t)(chunk->code[offset + 1] << 8);
+static int jumpInstruction(const char *name, int sign, Chunk *chunk, int offset) {
+    uint16_t jump = (uint16_t) (chunk->code[offset + 1] << 8);
     jump |= chunk->code[offset + 2];
     printf("%-16s %4d -> %d\n", name, offset, offset + 3 + sign + jump);
     return offset + 3;
 }
 
-int disassembleInstruction(Chunk* chunk, int offset) {
+int disassembleInstruction(Chunk *chunk, int offset) {
     printf("%04d ", offset); // Print the offset with zero padding
 
     if (offset > 0 && chunk->lines[offset] == chunk->lines[offset - 1]) {
@@ -74,6 +76,10 @@ int disassembleInstruction(Chunk* chunk, int offset) {
             return constantInstruction("OP_DEFINE_GLOBAL", chunk, offset);
         case OP_SET_GLOBAL:
             return constantInstruction("OP_SET_GLOBAL", chunk, offset);
+        case OP_GET_UPVALUE:
+            return byteInstruction("OP_GET_UPVALUE", chunk, offset);
+        case OP_SET_UPVALUE:
+            return byteInstruction("OP_SET_UPVALUE", chunk, offset);
         case OP_EQUAL:
             return simpleInstruction("OP_EQUAL", offset);
         case OP_GREATER:
@@ -108,6 +114,14 @@ int disassembleInstruction(Chunk* chunk, int offset) {
             printf("%-16s %4d ", "OP_CLOSURE", constant);
             printValue(chunk->constants.values[constant]);
             printf("\n");
+
+            ObjFunction *function = AS_FUNCTION(chunk->constants.values[constant]);
+            for (int j = 0; j < function->upvalueCount; j++) {
+                int isLocal = chunk->code[offset++];
+                int index = chunk->code[offset++];
+                printf("%04d      |                     %s %d\n", offset - 2, isLocal ? "local" : "upvalue", index);
+            }
+
             return offset;
         }
         case OP_RETURN:
@@ -117,4 +131,3 @@ int disassembleInstruction(Chunk* chunk, int offset) {
             return offset + 1; // Might be a bug? But if it is, the interpreter or program is already broken...
     }
 }
-
