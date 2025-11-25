@@ -113,6 +113,15 @@ ObjString *tableFindString(Table *table, const char *chars, int length, uint32_t
     }
 }
 
+void markTable(Table* table) {
+    // Mark each key and value in the array
+    for (int i = 0; i < table->capacity; i++) {
+        Entry* entry = &table->entries[i];
+        markObject((Obj*)entry->key);
+        markValue(entry->value);
+    }
+}
+
 bool tableSet(Table *table, ObjString *key, Value value) {
     if (table->count + 1 > table->capacity * TABLE_MAX_LOAD) {
         int capacity = GROW_CAPACITY(table->capacity);
