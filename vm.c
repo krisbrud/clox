@@ -171,6 +171,14 @@ static bool invoke(ObjString* name, int argCount) {
     }
 
     ObjInstance* instance = AS_INSTANCE(receiver);
+
+    Value value;
+    if (tableGet(&instance->fields, name, &value)) {
+        // Handle invocation of a function stored in a field
+        vm.stackTop[-argCount - 1] = value;
+        return callValue(value, argCount);
+    }
+
     return invokeFromClass(instance->klass, name, argCount);
 }
 
