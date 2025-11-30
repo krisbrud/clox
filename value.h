@@ -66,10 +66,11 @@ typedef enum {
 
 typedef struct {
     ValueType type;
+
     union {
         bool boolean;
         double number;
-        Obj* obj;
+        Obj *obj;
     } as;
 } Value; // TODO: Support different types of values
 
@@ -92,13 +93,17 @@ typedef struct {
 typedef struct {
     int capacity;
     int count;
-    Value* values;
+    Value *values;
 } ValueArray;
 
 bool valuesEqual(Value a, Value b);
-void initValueArray(ValueArray* array);
-void writeValueArray(ValueArray* array, Value value);
-void freeValueArray(ValueArray* array);
+
+void initValueArray(ValueArray *array);
+
+void writeValueArray(ValueArray *array, Value value);
+
+void freeValueArray(ValueArray *array);
+
 void printValue(Value value);
 
 #endif //CLOX_VALUE_H
